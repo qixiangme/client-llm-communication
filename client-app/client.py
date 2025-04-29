@@ -42,7 +42,7 @@ if __name__ == "__main__":
     fine_tune_response = fine_tune_model(texts)
     print("서버 응답:", fine_tune_response.get("message", "응답 없음"))
 
-    prompt = "what is essential for a successful software project?"
+    prompt = "i know the importance of teamwork and collaboration in software development."
     generated_text = generate_text(prompt)
     if generated_text:
         print("\n생성된 텍스트:")
