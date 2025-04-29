@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   llm-server:
     build:
@@ -9,6 +7,8 @@ services:
       - "8000:8000"
     networks:
       - gpt2-network
+    environment:
+      - FLASK_ENV=development  # Flask 개발 모드로 설정
 
   client-app:
     build:
@@ -18,6 +18,8 @@ services:
       - llm-server
     networks:
       - gpt2-network
+    environment:
+      - LLM_SERVER_URL=http://llm-server:8000  # 서버 URL을 환경 변수로 설정
 
 networks:
   gpt2-network:
