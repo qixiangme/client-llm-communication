@@ -27,20 +27,22 @@ def generate_text(prompt):
     except requests.exceptions.RequestException as e:
         print("텍스트 생성 실패:", e)
         return None
-    
 
 if __name__ == "__main__":
     texts = [
-        {"input": "저는 소프트웨어 개발에 열정을 가지고 있으며, 다양한 프로젝트에서 경험을 쌓아왔습니다.", "output": "소프트웨어 개발에 대한 열정을 어떻게 표현하시겠어요?"},
-        {"input": "저는 다양한 기술을 배우며 성장해왔고, 특히 팀워크의 중요성을 많이 느꼈습니다.", "output": "팀워크에서 가장 중요한 점은 무엇인가요?"}
+        {"input": "I am passionate about software development and have gained experience through various projects.", "output": "How would you express your passion for software development?"},
+        {"input": "I have grown by learning various technologies and have especially realized the importance of teamwork.", "output": "What do you think is the most important aspect of teamwork?"}
     ]
- # Fine-tuning 시작
-    print("파인튜닝 시작...")
-    fine_tune_response = fine_tune_model(texts)
-    print(fine_tune_response)
 
-    prompt = "소프트웨어 개발에 있어 중요한 기술은 무엇인가요?"
+    # Fine-tuning 시작
+    print("\n파인튜닝 시작...\n")
+    fine_tune_response = fine_tune_model(texts)
+    print("서버 응답:", fine_tune_response.get("message", "응답 없음"))
+
+    prompt = "what is essential for a successful software project?"
     generated_text = generate_text(prompt)
     if generated_text:
-        print(repr(generated_text))
-        print(f"생성된 텍스트: {generated_text}")
+        print("\n생성된 텍스트:")
+        print("="*50)
+        print(f"{generated_text}")
+        print("="*50)
