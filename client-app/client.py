@@ -31,7 +31,10 @@ def generate_text(prompt):
 if __name__ == "__main__":
     texts = [
         {"input": "I am passionate about software development and have gained experience through various projects.", "output": "How would you express your passion for software development?"},
-        {"input": "I have grown by learning various technologies and have especially realized the importance of teamwork.", "output": "What do you think is the most important aspect of teamwork?"}
+        {"input": "I have grown by learning various technologies and have especially realized the importance of teamwork.", "output": "What do you think is the most important aspect of teamwork?"},
+        {"input": "A good leader must listen to their team and guide them towards a common goal.", "output": "What makes a great leader?"},
+        {"input": "Collaboration and communication are key when working on a project with a team.", "output": "How do you ensure effective communication in a team project?"},
+        {"input": "Continuous learning is essential for personal and professional growth.", "output": "What is the importance of continuous learning in one's career?"}
     ]
 
     # Fine-tuning 시작

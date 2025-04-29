@@ -65,7 +65,7 @@ def generate_text():
 
     # 텍스트 생성
     inputs = tokenizer(prompt, return_tensors="pt")
-    outputs = model.generate(inputs["input_ids"], max_length=100)
+    outputs = model.generate(inputs["input_ids"], max_length=100,temperature=0.7, num_beams=5, no_repeat_ngram_size=2)
     generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True,clean_up_tokenization_spaces=True)
 
     return jsonify({"generated_text": generated_text})
