@@ -1,72 +1,68 @@
 from flask import Flask, request, jsonify
-from transformers import GPT2LMHeadModel, GPT2Tokenizer, Trainer, TrainingArguments
-from torch.utils.data import Dataset
+from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
 app = Flask(__name__)
 
-# 모델과 토크나이저 로드
-model = GPT2LMHeadModel.from_pretrained("gpt2")
-tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+# 모델 및 토크나이저 로드 (TinyLlama 모델 경로 지정)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = AutoModelForCausalLM.from_pretrained("TinyLlama/TinyLlama-1.1B-Chat-v1.0").to(device)
+tokenizer = AutoTokenizer.from_pretrained("TinyLlama/TinyLlama-1.1B-Chat-v1.0")
+
 tokenizer.pad_token = tokenizer.eos_token
-# Fine-tuning 데이터셋 클래스
-class TextDataset(Dataset):
-    def __init__(self, texts, tokenizer, max_length=512):
-        self.input_ids = []
-        self.labels = []
-        for text in texts:
-            input_text = text['input']
-            label_text = text['output']
-            encoding = tokenizer(input_text, truncation=True, padding='max_length', max_length=max_length, return_tensors='pt')
-            label_encoding = tokenizer(label_text, truncation=True, padding='max_length', max_length=max_length, return_tensors='pt')
-            self.input_ids.append(encoding['input_ids'][0])  # 텐서로 저장
-            self.labels.append(label_encoding['input_ids'][0])  # 텐서로 저장
 
-    def __len__(self):
-        return len(self.input_ids)
+fine_tuned_model = None
 
-    def __getitem__(self, idx):
-        return {'input_ids': self.input_ids[idx], 'labels': self.labels[idx]}
-
-# TrainingArguments 설정
-training_args = TrainingArguments(
-    output_dir="./results",
-    num_train_epochs=3,
-    per_device_train_batch_size=4,
-    save_steps=500,
-    logging_dir='./logs',
-)
-
-# Fine-tuning Trainer 설정
-trainer = Trainer(
-    model=model,
-    args=training_args,
-    train_dataset=None,  # 최초에는 None으로 설정
-)
-
-# Fine-tuning을 위한 엔드포인트
 @app.route("/finetune", methods=["POST"])
 def finetune():
+    global fine_tuned_model
     data = request.get_json()
     texts = data.get("texts", [])
+
+    input_texts = [text['input'] for text in texts]
+    target_texts = [text['output'] for text in texts]
+
+    model.train()
+
+    # 입력과 정답을 한꺼번에 배치로 토크나이징, max_length를 동일하게 설정
+    inputs = tokenizer(input_texts, return_tensors="pt", padding=True, truncation=True, max_length=512, return_attention_mask=True).to(device)
     
-    # Fine-tuning용 데이터셋 생성
-    train_dataset = TextDataset(texts, tokenizer)
-    trainer.train_dataset = train_dataset  # 데이터셋을 설정
-    trainer.train()  # 모델 훈련
+    # target_texts도 max_length에 맞춰 잘라서 패딩 적용
+    labels = tokenizer(target_texts, return_tensors="pt", padding=True, truncation=True, max_length=512, return_attention_mask=True).input_ids.to(device)
 
-    return jsonify({"message": "Fine-tuning started!"})
+    # 라벨의 pad 토큰을 무시하도록 설정
+    labels[labels == tokenizer.pad_token_id] = -100
 
-# 면접 질문 생성 엔드포인트
+    # 입력과 라벨의 배치 크기가 동일한지 확인
+    batch_size = inputs.input_ids.size(0)
+    if batch_size != labels.size(0):
+        # 배치 크기 맞추기 (입력과 레이블의 길이가 동일하지 않으면 최소 길이에 맞추기)
+        min_size = min(batch_size, labels.size(0))
+        inputs.input_ids = inputs.input_ids[:min_size]
+        labels = labels[:min_size]
+
+    # 모델에 입력
+    outputs = model(**inputs, labels=labels)
+    loss = outputs.loss
+    loss.backward()
+
+    # fine_tuned_model을 업데이트
+    fine_tuned_model = model
+
+    return jsonify({"message": f"Fine-tuning completed! Loss: {loss.item():.4f}"})
+
 @app.route("/generate", methods=["POST"])
 def generate_text():
+    global fine_tuned_model
     data = request.get_json()
     prompt = data.get("prompt", "")
 
-    # 텍스트 생성
-    inputs = tokenizer(prompt, return_tensors="pt")
-    outputs = model.generate(inputs["input_ids"], max_length=100,temperature=0.7, num_beams=5, no_repeat_ngram_size=2)
-    generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True,clean_up_tokenization_spaces=True)
+    # fine_tuned_model이 있으면 이를 사용, 없으면 원본 모델 사용
+    model_to_use = fine_tuned_model if fine_tuned_model else model
+
+    inputs = tokenizer(prompt, return_tensors="pt").to(device)
+    outputs = model_to_use.generate(inputs["input_ids"], max_length=100)
+    generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
     return jsonify({"generated_text": generated_text})
 
