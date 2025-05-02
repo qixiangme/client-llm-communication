@@ -1,4 +1,10 @@
 flask
-torch
-transformers
-accelerate>=0.26.0  
+torch>=2.0
+transformers>=4.36.2
+accelerate
+peft>=0.6.0
+trl>=0.7.10
+datasets
+sentencepiece  # 일부 tokenizer에 필요할 수 있음
+scipy  # 일부 학습 스케줄러나 metric에 사용
+bitsandbytes

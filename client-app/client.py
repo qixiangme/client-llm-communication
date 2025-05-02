@@ -34,7 +34,18 @@ if __name__ == "__main__":
         {"input": "I have grown by learning various technologies and have especially realized the importance of teamwork.", "output": "What do you think is the most important aspect of teamwork?"},
         {"input": "A good leader must listen to their team and guide them towards a common goal.", "output": "What makes a great leader?"},
         {"input": "Collaboration and communication are key when working on a project with a team.", "output": "How do you ensure effective communication in a team project?"},
-        {"input": "Continuous learning is essential for personal and professional growth.", "output": "What is the importance of continuous learning in one's career?"}
+        {"input": "Continuous learning is essential for personal and professional growth.", "output": "What is the importance of continuous learning in one's career?"},
+        {"input": "I believe in the power of collaboration and the importance of sharing knowledge.", "output": "How do you promote knowledge sharing in a team?"},
+        {"input": "I have experience in agile methodologies and understand the importance of adaptability.", "output": "What is your experience with agile methodologies?"},
+        {"input": "I enjoy solving complex problems and finding efficient solutions.", "output": "How do you approach problem-solving in software development?"},
+        {"input": "I value feedback and see it as an opportunity for growth.", "output": "How do you handle feedback from peers?"},
+        {"input": "I am committed to delivering high-quality work and meeting deadlines.", "output": "What is your approach to time management?"},
+        {"input": "I have a strong understanding of software development principles and best practices.", "output": "What are the key principles of software development?"},
+        {"input": "I am always looking for ways to improve my skills and knowledge.", "output": "How do you stay updated with the latest trends in technology?"},
+        {"input": "I believe in the importance of mentorship and helping others grow.", "output": "How do you approach mentorship in your career?"},
+        {"input": "I have experience working in diverse teams and appreciate different perspectives.", "output": "How do you handle diversity in a team?"},
+        {"input": "I am passionate about open-source projects and contributing to the community.", "output": "What is your experience with open-source contributions?"},
+        {"input": "I understand the importance of user experience and design in software development.", "output": "How do you prioritize user experience in your projects?"}
     ]
 
     # Fine-tuning 시작
