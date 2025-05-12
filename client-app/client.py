@@ -44,7 +44,24 @@ if __name__ == "__main__":
         {"input": "I believe in the importance of mentorship and helping others grow.", "output": "How do you approach mentorship in your career?"},
         {"input": "I have experience working in diverse teams and appreciate different perspectives.", "output": "How do you handle diversity in a team?"},
         {"input": "I am passionate about open-source projects and contributing to the community.", "output": "What is your experience with open-source contributions?"},
-        {"input": "I understand the importance of user experience and design in software development.", "output": "How do you prioritize user experience in your projects?"}
+        {"input": "I understand the importance of user experience and design in software development.", "output": "How do you prioritize user experience in your projects?"},
+        {"input": "I have experience with cloud technologies and understand their impact on software development.", "output": "What is your experience with cloud technologies?"},
+        {"input": "I am committed to writing clean and maintainable code.", "output": "What is your approach to code quality?"},
+        {"input": "I believe in the importance of testing and quality assurance.", "output": "How do you ensure the quality of your code?"},
+        {"input": "I have experience with version control systems and understand their importance.", "output": "What is your experience with version control?"},
+        {"input": "I am always looking for ways to optimize performance and efficiency.", "output": "How do you approach performance optimization in your projects?"},
+        {"input": "I value collaboration and believe that great ideas can come from anyone.", "output": "How do you foster a collaborative environment in your team?"},
+        {"input": "I have experience with data analysis and understand its importance in decision-making.", "output": "What is your experience with data analysis?"},
+        {"input": "I am committed to continuous improvement and always seek feedback.", "output": "How do you approach self-improvement in your career?"},
+        {"input": "I believe in the importance of work-life balance and mental health.", "output": "How do you maintain a healthy work-life balance?"},
+        {"input": "I have experience with project management and understand its challenges.", "output": "What is your experience with project management?"},
+        {"input": "I am passionate about learning new technologies and expanding my skill set.", "output": "How do you approach learning new technologies?"},
+        {"input": "I believe in the importance of empathy and understanding in teamwork.", "output": "How do you practice empathy in your work?"},
+        {"input": "I have experience with remote work and understand its challenges.", "output": "What is your experience with remote work?"},
+        {"input": "I am committed to diversity and inclusion in the workplace.", "output": "How do you promote diversity and inclusion in your team?"},
+        {"input": "I believe in the importance of networking and building relationships.", "output": "How do you approach networking in your career?"},
+        {"input": "I have experience with mentoring and coaching others.", "output": "What is your approach to mentoring?"}
+
     ]
 
     # Fine-tuning 시작
@@ -57,5 +74,5 @@ if __name__ == "__main__":
     if generated_text:
         print("\n생성된 텍스트:")
         print("="*50)
-        print(f"{generated_text}")
+        print(generated_text.strip().split('\n')[-1])
         print("="*50)
