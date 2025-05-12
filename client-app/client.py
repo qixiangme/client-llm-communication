@@ -18,16 +18,15 @@ def fine_tune_model(texts):
 def generate_text(prompt):
     url = "http://llm-server:8000/generate"
     data = {"prompt": prompt}
-
-    try:
-        response = requests.post(url, json=data)
-        response.raise_for_status()
-        generated_text = response.json().get("generated_text")
-        return generated_text
-    except requests.exceptions.RequestException as e:
-        print("텍스트 생성 실패:", e)
-        return None
-
+    while True:
+        try:
+            response = requests.post(url, json=data)
+            response.raise_for_status()
+            generated_text = response.json().get("generated_text")
+            return generated_text
+        except requests.exceptions.RequestException as e:
+            print("텍스트 생성 실패:", e)
+            time.sleep(5)
 if __name__ == "__main__":
     texts = [
         {"input": "I am passionate about software development and have gained experience through various projects.", "output": "How would you express your passion for software development?"},
@@ -49,9 +48,9 @@ if __name__ == "__main__":
     ]
 
     # Fine-tuning 시작
-    print("\n파인튜닝 시작...\n")
-    fine_tune_response = fine_tune_model(texts)
-    print("서버 응답:", fine_tune_response.get("message", "응답 없음"))
+    # print("\n파인튜닝 시작...\n")
+    # fine_tune_response = fine_tune_model(texts)
+    # print("서버 응답:", fine_tune_response.get("message", "응답 없음"))
 
     prompt = "i know the importance of teamwork and collaboration in software development."
     generated_text = generate_text(prompt)

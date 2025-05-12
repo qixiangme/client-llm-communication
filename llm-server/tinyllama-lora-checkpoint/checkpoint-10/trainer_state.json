@@ -11,10 +11,10 @@
   "log_history": [
     {
       "epoch": 3.3333333333333335,
-      "grad_norm": 0.7202617526054382,
+      "grad_norm": 2.7909951210021973,
       "learning_rate": 0.0018968727415326883,
-      "loss": 0.5682,
-      "mean_token_accuracy": 0.8596948772668839,
+      "loss": 1.2112,
+      "mean_token_accuracy": 0.7361496597528457,
       "num_tokens": 2202.0,
       "step": 10
     }
