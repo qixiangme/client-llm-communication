@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import os
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
 from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model, PeftModel
@@ -67,6 +68,8 @@ def finetune():
 
     trainer.train()
     fine_tuned_model = trainer.model
+    trainer.model.save_pretrained("tinyllama-lora-checkpoint")
+
 
     return jsonify({"message": "Fine-tuning completed!"})
 
@@ -75,6 +78,13 @@ def generate_text():
     global fine_tuned_model
     data = request.get_json()
     prompt = data.get("prompt", "")
+
+        # Checkpoint에서 fine-tuned 모델 로드
+    if fine_tuned_model is None and os.path.exists("tinyllama-lora-checkpoint"):
+        # base_model은 이미 로드되어 있으므로 여기에 LoRA weights만 덮어씌움
+        fine_tuned_model = PeftModel.from_pretrained(base_model, "tinyllama-lora-checkpoint")
+        fine_tuned_model.to(device)
+
 
     model_to_use = fine_tuned_model if fine_tuned_model else base_model
 
